@@ -3,7 +3,7 @@
 }
 
 .photograph-header {
-    background-color: #FAFAFA;
+    background-color: #fafafa;
     height: 300px;
     margin: 0 100px;
 }
@@ -16,14 +16,14 @@
     width: 170px;
     height: 70px;
     border: none;
-    background-color: #901C1C;
+    background-color: #901c1c;
     border-radius: 5px;
     cursor: pointer;
 }
 
 .modal {
     border-radius: 5px;
-    background-color: #DB8876;
+    background-color: #db8876;
     width: 50%;
     display: flex;
     flex-direction: column;
@@ -56,7 +56,7 @@ form {
 }
 
 form label {
-    color: #312E2E;
+    color: #312e2e;
     font-size: 36px;
 }
 
@@ -73,4 +73,112 @@ form input {
     height: 68px;
     border: none;
     border-radius: 5px;
+}
+
+.photograph-header {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.information {
+    align-items: flex-start;
+}
+
+.information h2 {
+    color: #d3573c;
+    font-size: 36px;
+    margin-bottom: 10px;
+}
+
+.information p {
+    margin: 10px 0;
+}
+
+.portrait img {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.photograph-gallery {
+    margin: 0 100px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 40px;
+}
+
+.gallery-media img {
+    width: 350px;
+    height: 300px;
+    border-radius: 5px;
+    object-fit: cover;
+    cursor: pointer;
+}
+
+figure {
+    margin: 0;
+}
+
+video {
+    width: 350px;
+    height: 300px;
+    border-radius: 5px;
+    object-fit: cover;
+}
+
+.gallery-media-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #901c1c;
+}
+
+.gallery-media-info span {
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.gallery-media-info span i {
+    margin-left: 5px;
+}
+
+.photograph-filter {
+    margin: 20px 100px;
+    font-weight: bold;
+    display: none;
+}
+
+.photograph-filter select {
+    margin: 0 15px;
+    padding: 10px;
+    background: #901c1c;
+    color: white;
+    border-radius: 5px;
+}
+
+.photograph-sticky {
+    margin-right: 50px;
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    z-index: 100;
+}
+
+.sticky-information {
+    width: 250px;
+    height: 45px;
+    font-weight: bold;
+    background: #db8876;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    border-radius: 5px 5px 0 0;
+}
+
+.sticky-information p {
+    margin: 0;
 }

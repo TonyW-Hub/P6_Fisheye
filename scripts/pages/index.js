@@ -1,45 +1,54 @@
-    async function getPhotographers() {
-        // Penser à remplacer par les données récupérées dans le json
-        const photographers = [
-            {
-                "name": "Ma data test",
-                "id": 1,
-                "city": "Paris",
-                "country": "France",
-                "tagline": "Ceci est ma data test",
-                "price": 400,
-                "portrait": "account.png"
-            },
-            {
-                "name": "Autre data test",
-                "id": 2,
-                "city": "Londres",
-                "country": "UK",
-                "tagline": "Ceci est ma data test 2",
-                "price": 500,
-                "portrait": "account.png"
-            },
-        ]
-        // et bien retourner le tableau photographers seulement une fois
-        return ({
-            photographers: [...photographers, ...photographers, ...photographers]})
-    }
+async function displayData(photographers, medias, data) {
+    // Get DOM elmeent for display data
+    const photographersSection = document.querySelector('.photographer_section');
+    const photographHeader = document.querySelector('.photograph-header');
+    const filterContainer = document.createElement('div');
+    filterContainer.innerHTML = 'Trier par';
+    filterContainer.classList.add('photograph-filter');
+    const filterMedias = document.createElement('select');
+    filterMedias.classList.add('photograph-filter-select');
+    const popular = document.createElement('option');
+    popular.innerHTML = 'Popularité';
+    const date = document.createElement('option');
+    date.innerHTML = 'Date';
+    const title = document.createElement('option');
+    title.innerHTML = 'Titre';
+    const gallery = document.createElement('div');
+    gallery.classList.add('photograph-gallery');
+    const stickyContainer = document.createElement('div');
+    stickyContainer.classList.add('photograph-sticky');
+    const main = document.querySelector('#main');
+    filterMedias.appendChild(popular);
+    filterMedias.appendChild(date);
+    filterMedias.appendChild(title);
+    filterContainer.appendChild(filterMedias);
+    main.appendChild(filterContainer);
+    main.appendChild(gallery);
+    main.appendChild(stickyContainer);
 
-    async function displayData(photographers) {
-        const photographersSection = document.querySelector(".photographer_section");
+    // Get id  in url params
+    const urlId = new URLSearchParams(window.location.search).get('id');
 
-        photographers.forEach((photographer) => {
-            const photographerModel = photographerFactory(photographer);
-            const userCardDOM = photographerModel.getUserCardDOM();
+    // Loop for each photographers in database
+    photographers.forEach((photographer) => {
+        const photographerModel = photographerFactory(photographer);
+        const userCardDOM = photographerModel.getUserCardDOM();
+        if (photographersSection !== null) {
             photographersSection.appendChild(userCardDOM);
-        });
-    };
+        }
+        const photographpherMedias = medias.filter((media) => media.photographerId === photographer.id);
+        if (photographHeader !== null && filterContainer !== null) {
+            const detailsPhotographerModel = detailsPhotographer(photographpherMedias, photographerModel, urlId);
+        }
+    });
+}
 
-    async function init() {
-        // Récupère les datas des photographes
-        const { photographers } = await getPhotographers();
-        displayData(photographers);
-    };
-    
-    init();
-    
+async function init() {
+    // Recover photographers data
+    const data = await getData();
+    const { photographers } = await getPhotographers();
+    const { medias } = await getMedias();
+    displayData(photographers, medias, data);
+}
+
+init();
