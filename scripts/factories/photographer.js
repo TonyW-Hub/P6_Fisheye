@@ -7,7 +7,7 @@ function photographerFactory(data) {
         // Create article of photographers
         const article = document.createElement('article');
         article.innerHTML += `
-            <div class="headerCard">
+            <div class="headerCard" tabindex="0">
                 <img src="${picture}" alt="${name}"/>
                 <h2>${name}</h2>
             </div>
@@ -20,6 +20,12 @@ function photographerFactory(data) {
         article.addEventListener('click', () => {
             window.location = `photographer.html?id=${data.id}`;
         });
+        article.addEventListener('keyup', (e) => {
+            if (e.key === 'Enter') {
+                window.location = `photographer.html?id=${data.id}`;
+            }
+        });
+
         return article;
     }
     return { name, picture, getUserCardDOM, price, city, country, tagline, id };

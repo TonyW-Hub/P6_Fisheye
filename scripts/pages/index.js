@@ -1,5 +1,7 @@
 async function displayData(photographers, medias, data) {
     // Get DOM elmeent for display data
+    const body = document.getElementsByTagName('body')[0];
+    const logo = document.querySelector('.logo');
     const photographersSection = document.querySelector('.photographer_section');
     const photographHeader = document.querySelector('.photograph-header');
     const filterContainer = document.createElement('div');
@@ -17,6 +19,9 @@ async function displayData(photographers, medias, data) {
     gallery.classList.add('photograph-gallery');
     const stickyContainer = document.createElement('div');
     stickyContainer.classList.add('photograph-sticky');
+    const modalMedia = document.createElement('dialog');
+    modalMedia.classList.add('modal-media');
+    modalMedia.setAttribute('autofocus', 'autofocus');
     const main = document.querySelector('#main');
     filterMedias.appendChild(popular);
     filterMedias.appendChild(date);
@@ -25,9 +30,14 @@ async function displayData(photographers, medias, data) {
     main.appendChild(filterContainer);
     main.appendChild(gallery);
     main.appendChild(stickyContainer);
+    body.appendChild(modalMedia);
 
     // Get id  in url params
     const urlId = new URLSearchParams(window.location.search).get('id');
+
+    logo.addEventListener('click', () => {
+        window.location.href = 'index.html'
+    })
 
     // Loop for each photographers in database
     photographers.forEach((photographer) => {

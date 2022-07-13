@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
     <head>
         <link href="css/style.css" rel="stylesheet" type="text/css" />
         <meta charset="utf-8" />
@@ -16,7 +16,7 @@
     </head>
     <body>
         <header>
-            <img src="assets/images/logo.png" class="logo" />
+            <img src="assets/images/logo.png" alt="Fisheye Home page" class="logo" />
         </header>
         <main id="main">
             <div class="photograph-header"></div>
@@ -24,15 +24,35 @@
         <div id="contact_modal">
             <div class="modal">
                 <header>
-                    <h2>Contactez-moi</h2>
-                    <img src="assets/icons/close.svg" onclick="closeModal()" />
+                    <h1 class="title-contact">Contactez-moi</h1>
+                    <img src="assets/icons/close.svg" alt="Cross close contact form" onclick="closeModal()" />
                 </header>
                 <form>
                     <div>
-                        <label>Prénom</label>
-                        <input />
+                        <label for="firstname">Prénom</label>
+                        <input
+                            type="text"
+                            maxlength="30"
+                            name="firstname"
+                            id="firstname"
+                            required
+                            aria-required="true"
+                        />
+                        <label for="lastname">Nom</label>
+                        <input type="text" maxlength="30" name="lastname" id="lastname" required aria-required="true" />
+                        <label for="email">Email</label>
+                        <input type="email" name="email" id="email" required aria-required="true" />
+                        <label for="message">Votre message</label>
+                        <textarea
+                            name="message"
+                            id="message"
+                            cols="30"
+                            rows="10"
+                            required
+                            aria-required="true"
+                        ></textarea>
                     </div>
-                    <button class="contact_button">Envoyer</button>
+                    <button class="contact_button" aria-label="send">Envoyer</button>
                 </form>
             </div>
         </div>

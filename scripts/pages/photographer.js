@@ -10,6 +10,7 @@ async function detailsPhotographer(data, photographer, urlId) {
     let mediasOfPhotographer = [];
     let AllLikes = [];
     let addLikeMedia = [];
+    let modalIndex = 1;
 
     data.forEach((medias) => {
         if (medias.photographerId === parseInt(urlId)) {
@@ -34,11 +35,15 @@ async function detailsPhotographer(data, photographer, urlId) {
                         <p class="place">${photograph.city}, ${photograph.country}</p>
                         <p class="tagline">${photograph.tagline}</p>
                     </div>
-                    <button class="contact_button" onclick="displayModal()">Contactez-moi</button>
+                    <button class="contact_button">Contactez-moi</button>
                     <div class="portrait">
                         <img src="${photograph.picture}" alt="">
                     </div>
                 `;
+            if (photographHeader) {
+                const btnCotact = document.querySelector('.contact_button');
+                btnCotact.addEventListener('click', () => displayModal(photograph.name));
+            }
         }
     }
 
@@ -122,10 +127,12 @@ async function detailsPhotographer(data, photographer, urlId) {
         const gallery = document.querySelector('.photograph-gallery');
         // Reset innerHtml for filter
         gallery.innerHTML = '';
+
         let mediaId = [];
+        let modalMedia = [];
 
         // Loop on all medias of photographer selected
-        medias.forEach((media) => {
+        medias.forEach((media, index) => {
             // Get path of medias
             const getImages = `assets/images/${getNameForMedias[0]}/${media.image}`;
             const getVideo = `assets/images/${getNameForMedias[0]}/${media.video}`;
@@ -142,20 +149,41 @@ async function detailsPhotographer(data, photographer, urlId) {
             }
             // Display container of one media
             gallery.innerHTML += `
-                <div class="gallery-media">
-                    ${displayVideo}
-                    ${displayImages}
+                <section class="gallery-media">
+                    <figure>
+                        ${displayVideo ? displayVideo : displayImages}                    
+                    </figure>
                     <div class="gallery-media-info">
                         <h4>${media.title}</h4>
                         <span class="gallery-media-likes">${
                             localStorage.getItem(media.id) ? media.likes + 1 : media.likes
                         } <i class="fa-solid fa-heart" aria-label="likes"></i></span>
                     </div>
-                </div>
+                </secti>
             `;
             if (gallery !== null) {
+                modalMedia.push({
+                    index: index,
+                    image: media.image ? getImages : '',
+                    video: media.video ? getVideo : '',
+                    title: media.title,
+                });
+
                 // Get DOM element
                 const likeContainer = document.querySelectorAll('.gallery-media-likes');
+
+                const figureMedia = document.querySelectorAll('figure');
+
+                // Loop on all media for display modal
+                for (let i = 0; i < figureMedia.length; i++) {
+                    let thumb = figureMedia[i];
+                    thumb.classList.add(`figure_${i}`);
+
+                    thumb.addEventListener('click', () => {
+                        // Display Modal media
+                        showModalMedia(i, modalMedia);
+                    });
+                }
                 // Loop on all medias
                 for (let i = 0; i < likeContainer.length; i++) {
                     // Get likes of media
@@ -169,23 +197,33 @@ async function detailsPhotographer(data, photographer, urlId) {
                         let like = parseInt(likes.textContent);
                         // Remove & Add like user
                         if (localStorage.getItem(`${id}`)) {
+                            // Set id of media in localStorage
                             localStorage.removeItem(`${id}`);
+                            // Decrements like of selected media
                             like--;
+                            // Update likes user in localStorage
                             const getItemInLocalStorage = localStorage.getItem(`${photographer.name} Likes`);
                             const parseArray = JSON.parse(getItemInLocalStorage);
                             parseArray.pop();
                             localStorage.setItem(`${photographer.name} Likes`, JSON.stringify(parseArray));
+                            // Update Ui likes media
                             likes.innerHTML = like + ' ' + '<i class="fa-solid fa-heart" aria-label="likes"></i>';
-                            renderStickyInformation();
+                            // Update total likes
+                            renderStickyInformation(AllLikes);
                         } else {
+                            // Set id of media in localStorage
                             localStorage.setItem(`${id}`, 'liked');
+                            // Increment like of selected media
                             like++;
+                            // Update likes user in localStorage
                             const getItemInLocalStorage = localStorage.getItem(`${photographer.name} Likes`);
                             const parseArray = JSON.parse(getItemInLocalStorage);
                             parseArray.push(1);
                             localStorage.setItem(`${photographer.name} Likes`, JSON.stringify(parseArray));
+                            // Update ui likes media
                             likes.innerHTML = like + ' ' + '<i class="fa-solid fa-heart" aria-label="likes"></i>';
-                            renderStickyInformation();
+                            // Update total likes
+                            renderStickyInformation(AllLikes);
                         }
                     });
                 }
@@ -193,10 +231,136 @@ async function detailsPhotographer(data, photographer, urlId) {
         });
     }
 
-    function renderStickyInformation(likes, addLike) {
+    function showModalMedia(currentIndex, array) {
+        const modal = document.querySelector('.modal-media');
+        // Open Modal Media
+        modal.show();
+        const main = document.querySelector('#main');
+        // Reset Modal innerHtml
+        modal.innerHTML = ' ';
+        main.style.opacity = 0.2;
+        main.style.pointerEvents = 'none';
+        modal.innerHTML += `
+        <div id="box">
+            <figure>
+                <img src=${array[currentIndex].image} tabindex="0" >
+                <video controls="controls" autoplay><source src="${array[currentIndex].video}" type="video/mp4"></video>
+                <figcaption>${array[currentIndex].title}</figcaption>
+            </figure>
+            <a class="prev" tabindex="0" >&#10094;</a>
+            <a class="next" tabindex="0" >&#10095;</a>
+            <span tabindex="0" >&#x2716;</span>
+        </div>`;
+
+        if (modal) {
+            // Get modal DOM element 
+            const currentImage = document.querySelector('#box').querySelector('img');
+            currentImage.focus();
+            currentImage.style.display = 'none';
+            const videoBox = document.querySelector('#box').querySelector('video');
+            videoBox.focus();
+            videoBox.style.display = 'none';
+            const currentSourceVideo = document.querySelector('#box').querySelector('video').querySelector('source');
+            let figcaption = document.querySelector('figcaption');
+            // Condition for display img element or video element
+            if (array[currentIndex].image !== '') {
+                currentImage.style.display = 'block';
+            }
+            if (array[currentIndex].video !== '') {
+                videoBox.style.display = 'block';
+            }
+
+            // Add focus on the modal for keyboard control
+            modal.focus();
+
+            // Modal keyboard control
+            modal.addEventListener('keyup', (e) => {
+                if (e.key === 'Escape' || e.target.localName === 'span' && e.key === "Enter") {
+                    modal.close();
+                    main.style.opacity = 1;
+                    main.style.pointerEvents = 'auto';
+                }
+                if (e.key === 'ArrowLeft' || e.key === 'Left' || e.target.localName === 'img' || 'video' && e.key === "Enter") {
+                    currentIndex === 0 ? (currentIndex = array.length - 1) : currentIndex--;
+                    if (array[currentIndex].image !== '') {
+                        currentImage.src = array[currentIndex].image;
+                        currentImage.style.display = 'block';
+                        videoBox.style.display = 'none';
+                    }
+                    if (array[currentIndex].video !== '') {
+                        currentSourceVideo.src = array[currentIndex].video;
+                        videoBox.style.display = 'block';
+                        videoBox.load();
+                        currentImage.style.display = 'none';
+                    }
+                    figcaption.textContent = array[currentIndex].title;
+                } else if (e.key === 'ArrowRight' || e.key === 'Right' || e.target.localName === 'img' || 'video' && e.key === "Enter") {
+                    currentIndex < array.length - 1 ? currentIndex++ : (currentIndex = 0);
+                    if (array[currentIndex].image !== '') {
+                        currentImage.src = array[currentIndex].image;
+                        currentImage.style.display = 'block';
+                        videoBox.style.display = 'none';
+                    }
+                    if (array[currentIndex].video !== '') {
+                        currentSourceVideo.src = array[currentIndex].video;
+                        videoBox.style.display = 'block';
+                        videoBox.load();
+                        currentImage.style.display = 'none';
+                    }
+                    figcaption.textContent = array[currentIndex].title;
+                }
+            });
+
+            const next = modal.querySelector('.next');
+            next.addEventListener('click', () => {
+                currentIndex < array.length - 1 ? currentIndex++ : (currentIndex = 0);
+                if (array[currentIndex].image !== '') {
+                    currentImage.src = array[currentIndex].image;
+                    currentImage.style.display = 'block';
+                    videoBox.style.display = 'none';
+                }
+                if (array[currentIndex].video !== '') {
+                    currentSourceVideo.src = array[currentIndex].video;
+                    videoBox.style.display = 'block';
+                    videoBox.load();
+                    currentImage.style.display = 'none';
+                }
+                figcaption.textContent = array[currentIndex].title;
+            });
+
+            const prev = modal.querySelector('.prev');
+            prev.addEventListener('click', () => {
+                currentIndex === 0 ? (currentIndex = array.length - 1) : currentIndex--;
+                if (array[currentIndex].image !== '') {
+                    currentImage.src = array[currentIndex].image;
+                    currentImage.style.display = 'block';
+                    videoBox.style.display = 'none';
+                }
+                if (array[currentIndex].video !== '') {
+                    currentSourceVideo.src = array[currentIndex].video;
+                    videoBox.style.display = 'block';
+                    videoBox.load();
+                    currentImage.style.display = 'none';
+                }
+                figcaption.textContent = array[currentIndex].title;
+            });
+        }
+
+        // Close modal media
+        const spanClose = modal.querySelector('span');
+        spanClose.addEventListener('click', () => {
+            // modal.style.display = 'none';
+            modal.close();
+            main.style.opacity = 1;
+            main.style.pointerEvents = 'auto';
+        });
+    }
+
+    function renderStickyInformation(likes) {
         // Get DOM element for display information likes
         const sticky = document.querySelector('.photograph-sticky');
         if (photographer.id !== undefined && photographer.id === parseInt(urlId) && likes !== undefined) {
+            sticky.innerHTML = '';
             // Get sum of all likes in JSON
             const totalLikesJson = likes.reduce((previousValue, currentValue) => previousValue + currentValue, 0);
             // Get array of user likes in localStorage
@@ -218,7 +382,7 @@ async function detailsPhotographer(data, photographer, urlId) {
         }
     }
 
-    renderStickyInformation(AllLikes, addLikeMedia);
+    renderStickyInformation(AllLikes);
 
     return { getDetailsHeader, renderMediasGallery };
 }
