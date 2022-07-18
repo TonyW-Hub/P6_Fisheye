@@ -21,13 +21,13 @@
         <main id="main">
             <div class="photograph-header"></div>
         </main>
-        <div id="contact_modal">
+        <div id="contact_modal" aria-labelledby="title-contact">
             <div class="modal">
                 <header>
-                    <h1 class="title-contact">Contactez-moi</h1>
-                    <img src="assets/icons/close.svg" alt="Cross close contact form" onclick="closeModal()" />
+                    <h1 class="title-contact" id="title-contact">Contactez-moi</h1>
+                    <img src="assets/icons/close.svg" alt="Cross close contact form" onclick="closeModal()" aria-label="Close Contact form" />
                 </header>
-                <form>
+                <form action="" method="get">
                     <div>
                         <label for="firstname">Prénom</label>
                         <input
@@ -37,11 +37,12 @@
                             id="firstname"
                             required
                             aria-required="true"
+                            aria-label="First name"
                         />
                         <label for="lastname">Nom</label>
-                        <input type="text" maxlength="30" name="lastname" id="lastname" required aria-required="true" />
+                        <input type="text" maxlength="30" name="lastname" id="lastname" required aria-required="true" aria-label="Last name" />
                         <label for="email">Email</label>
-                        <input type="email" name="email" id="email" required aria-required="true" />
+                        <input type="email" name="email" id="email" required aria-required="true" aria-label="Email" />
                         <label for="message">Votre message</label>
                         <textarea
                             name="message"
@@ -50,9 +51,10 @@
                             rows="10"
                             required
                             aria-required="true"
+                            aria-label="Your message"
                         ></textarea>
                     </div>
-                    <button class="contact_button" aria-label="send">Envoyer</button>
+                    <button class="contact_button" id="submit-button" type="submit" aria-label="send">Envoyer</button>
                 </form>
             </div>
         </div>

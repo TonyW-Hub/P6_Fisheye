@@ -24,7 +24,7 @@
 .modal {
     border-radius: 5px;
     background-color: #db8876;
-    width: 50%;
+    width: 40%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -184,6 +184,10 @@ video {
     border-radius: 5px;
 }
 
+.photograph-filter select option {
+    border-radius: 0px;
+}
+
 .photograph-sticky {
     margin-right: 50px;
     position: fixed;
@@ -312,4 +316,18 @@ figcaption {
 .title-contact {
     color: black;
     font-size: 40px;
+}
+
+.error-input {
+    border: 2px solid red;
+}
+
+input, textarea {
+    margin-bottom: 10px;
+    margin-top: 5px;
+    padding-left: 5px;
+}
+
+.error-input:focus {
+    border: 2px solid red;
 }

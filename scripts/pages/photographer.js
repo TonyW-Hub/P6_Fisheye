@@ -37,7 +37,7 @@ async function detailsPhotographer(data, photographer, urlId) {
                     </div>
                     <button class="contact_button">Contactez-moi</button>
                     <div class="portrait">
-                        <img src="${photograph.picture}" alt="">
+                        <img src="${photograph.picture}" alt="${photograph.name}">
                     </div>
                 `;
             if (photographHeader) {
@@ -149,7 +149,7 @@ async function detailsPhotographer(data, photographer, urlId) {
             }
             // Display container of one media
             gallery.innerHTML += `
-                <section class="gallery-media">
+                <section class="gallery-media" tabindex="1">
                     <figure>
                         ${displayVideo ? displayVideo : displayImages}                    
                     </figure>
@@ -171,13 +171,21 @@ async function detailsPhotographer(data, photographer, urlId) {
 
                 // Get DOM element
                 const likeContainer = document.querySelectorAll('.gallery-media-likes');
-
+                const galleryMedia = document.querySelectorAll('.gallery-media')
                 const figureMedia = document.querySelectorAll('figure');
 
                 // Loop on all media for display modal
                 for (let i = 0; i < figureMedia.length; i++) {
                     let thumb = figureMedia[i];
                     thumb.classList.add(`figure_${i}`);
+
+                    let focusMedia = galleryMedia[i]
+
+                    focusMedia.addEventListener('keyup', (e) => {
+                        if (e.key == 'Enter') {
+                        showModalMedia(i, modalMedia);
+                        }
+                    })
 
                     thumb.addEventListener('click', () => {
                         // Display Modal media
@@ -240,24 +248,27 @@ async function detailsPhotographer(data, photographer, urlId) {
         modal.innerHTML = ' ';
         main.style.opacity = 0.2;
         main.style.pointerEvents = 'none';
+        // Create modal
         modal.innerHTML += `
-        <div id="box">
+        <div id="box" aria-label="image closeup view">
             <figure>
                 <img src=${array[currentIndex].image} tabindex="0" >
                 <video controls="controls" autoplay><source src="${array[currentIndex].video}" type="video/mp4"></video>
                 <figcaption>${array[currentIndex].title}</figcaption>
             </figure>
-            <a class="prev" tabindex="0" >&#10094;</a>
-            <a class="next" tabindex="0" >&#10095;</a>
-            <span tabindex="0" >&#x2716;</span>
+            <a class="prev" tabindex="0" aria-label="Previous image" >&#10094;</a>
+            <a class="next" tabindex="0" aria-label="Next image" >&#10095;</a>
+            <span tabindex="0" aria-label="Close dialog" >&#x2716;</span>
         </div>`;
 
         if (modal) {
             // Get modal DOM element 
             const currentImage = document.querySelector('#box').querySelector('img');
+            // Add focus on media
             currentImage.focus();
             currentImage.style.display = 'none';
             const videoBox = document.querySelector('#box').querySelector('video');
+            // Add focus on media
             videoBox.focus();
             videoBox.style.display = 'none';
             const currentSourceVideo = document.querySelector('#box').querySelector('video').querySelector('source');
@@ -312,6 +323,7 @@ async function detailsPhotographer(data, photographer, urlId) {
             });
 
             const next = modal.querySelector('.next');
+            // Event onClick for next media
             next.addEventListener('click', () => {
                 currentIndex < array.length - 1 ? currentIndex++ : (currentIndex = 0);
                 if (array[currentIndex].image !== '') {
@@ -329,6 +341,7 @@ async function detailsPhotographer(data, photographer, urlId) {
             });
 
             const prev = modal.querySelector('.prev');
+            // Event onClick for previous media
             prev.addEventListener('click', () => {
                 currentIndex === 0 ? (currentIndex = array.length - 1) : currentIndex--;
                 if (array[currentIndex].image !== '') {
