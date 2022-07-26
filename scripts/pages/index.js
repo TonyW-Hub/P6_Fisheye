@@ -1,5 +1,5 @@
 async function displayData(photographers, medias, data) {
-    // Get DOM elmeent for display data
+    // Get DOM element for display data
     const body = document.getElementsByTagName('body')[0];
     const logo = document.querySelector('.logo');
     const photographersSection = document.querySelector('.photographer_section');

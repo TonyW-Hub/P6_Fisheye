@@ -107,7 +107,7 @@ form input {
     margin: 0 100px;
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
+    justify-content: space-evenly;
     align-items: center;
     padding-bottom: 40px;
 }
@@ -182,10 +182,6 @@ video {
     background: #901c1c;
     color: white;
     border-radius: 5px;
-}
-
-.photograph-filter select option {
-    border-radius: 0px;
 }
 
 .photograph-sticky {
